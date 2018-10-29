@@ -1,7 +1,8 @@
-package pokhilko.aleksandr.ru.imgurapisample
+package pokhilko.aleksandr.ru.imgurapisample.ui
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import pokhilko.aleksandr.ru.imgurapisample.R
 
 class MainActivity : AppCompatActivity() {
 
