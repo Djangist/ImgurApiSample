@@ -5,5 +5,7 @@ package pokhilko.aleksandr.ru.domain.model
  */
 class Gallery(
         val name: String,
-        val displayName: String
+        val displayName: String,
+        val totalItems: Int,
+        val items: List<Item>
 )

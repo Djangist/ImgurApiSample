@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">ImgurApiSample</string>
+
+    <!-- buttons -->
+    <string name="btn_search">Search</string>
+
+    <!-- hints -->
+    <string name="hint_input_tag">Input tag here</string>
+
+    <string name="default_tag">venom</string>
+
 </resources>

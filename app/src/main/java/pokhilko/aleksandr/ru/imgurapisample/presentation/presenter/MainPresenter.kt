@@ -17,11 +17,10 @@ class MainPresenter: MvpPresenter<MainView>(), KoinComponent {
 
     val useCase: GalleryUseCase by inject()
 
-    override fun onFirstViewAttach() {
-        super.onFirstViewAttach()
-        useCase.getImagesByTag("venom")
+    fun searchImagesByTag(tag: String){
+        useCase.getImagesByTag(tag)
                 .schedulersIoToMain()
-                .subscribe({ Timber.d("gal name ${it.name}")}, { Timber.e(it)})
+                .subscribe({ viewState.showImages(it)}, { Timber.e(it)})
     }
 
 }

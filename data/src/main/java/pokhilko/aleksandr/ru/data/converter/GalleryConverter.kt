@@ -10,8 +10,8 @@ object GalleryConverter {
 
     fun fromNetwork(source: GalleryResponse?): Gallery {
         if( source == null )
-            throw IllegalArgumentException("gallery response is null") //TODO
-        return Gallery(source.name, source.displayName)
+            throw IllegalArgumentException("gallery response is null")
+        return Gallery(source.name, source.displayName, source.totalItems, source.items.map { ItemConverter.fromNetwork(it) })
     }
 
 }
