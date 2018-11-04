@@ -5,5 +5,6 @@ package pokhilko.aleksandr.ru.domain.model
  */
 data class Image(
         val description: String,
-        val link: String
+        val link: String,
+        val id: String
 )

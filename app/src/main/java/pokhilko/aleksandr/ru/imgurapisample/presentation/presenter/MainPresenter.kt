@@ -13,14 +13,60 @@ import timber.log.Timber
  * Created by Aleksandr Pokhilko on 30.10.2018
  */
 @InjectViewState
-class MainPresenter: MvpPresenter<MainView>(), KoinComponent {
+class MainPresenter : MvpPresenter<MainView>(), KoinComponent {
 
-    val useCase: GalleryUseCase by inject()
+    private val useCase: GalleryUseCase by inject()
 
-    fun searchImagesByTag(tag: String){
-        useCase.getImagesByTag(tag)
-                .schedulersIoToMain()
-                .subscribe({ viewState.showImages(it)}, { Timber.e(it)})
+    private var page = 0
+    private var isLoading = false
+    private var hasLoadedAllImages = false
+
+    override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
+        getLocalImages()
     }
+
+    private fun getLocalImages() {
+        useCase.getAllLocalImages()
+                .schedulersIoToMain()
+                .subscribe(
+                        {
+                            viewState.showImages(it)
+                            if (it.size == 0) {
+                                loadMore()
+                            } else {
+                                page = 1
+                            }
+                        },
+                        { Timber.e(it) }
+                )
+    }
+
+    fun loadMore() {
+        if (!isLoading) {
+            isLoading = true
+            useCase.loadImagesFromNetwork(page++)
+                    .schedulersIoToMain()
+                    .subscribe(
+                            { pair ->
+                                isLoading = false
+                                useCase.getImagesCountInStorage()
+                                        .schedulersIoToMain()
+                                        .subscribe({
+                                            Timber.d("it = $it pair.second = ${pair.second}")
+                                            hasLoadedAllImages = it == pair.second
+                                            Timber.d("hasLoadedAllImages = $hasLoadedAllImages")
+                                        },
+                                                { Timber.e(it) })
+                                Timber.d("subscribe")
+                            },
+                            { Timber.e(it) }
+                    )
+        }
+    }
+
+    fun isLoading(): Boolean = isLoading
+
+    fun hasLoadAllImages(): Boolean = hasLoadedAllImages
 
 }
