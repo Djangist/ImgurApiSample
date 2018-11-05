@@ -11,7 +11,7 @@ import retrofit2.http.Path
  */
 interface ImgurApiService {
 
-    @GET("gallery/t/{tag}")
-    fun imagesByTag(@Path("tag") tag: String): Single<ServerResponse<GalleryResponse>>
+    @GET("gallery/t/venom/{page}")
+    fun imagesPaged(@Path("page") page: Int): Single<ServerResponse<GalleryResponse>>
 
 }
