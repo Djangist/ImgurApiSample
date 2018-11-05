@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.PresenterType
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.paginate.Paginate
 import kotlinx.android.synthetic.main.activity_main.*
@@ -18,7 +19,7 @@ import pokhilko.aleksandr.ru.imgurapisample.ui.adapter.ImagePagedListAdapter
 
 class MainActivity : MvpAppCompatActivity(), MainView, Paginate.Callbacks {
 
-    @InjectPresenter
+    @InjectPresenter(type = PresenterType.GLOBAL)
     lateinit var presenter: MainPresenter
 
     private val adapter = ImagePagedListAdapter()
@@ -27,6 +28,8 @@ class MainActivity : MvpAppCompatActivity(), MainView, Paginate.Callbacks {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initViews()
+
+        presenter.getLocalImages()
     }
 
     override fun showImages(pagedList: PagedList<Image>) {
@@ -60,7 +63,6 @@ class MainActivity : MvpAppCompatActivity(), MainView, Paginate.Callbacks {
             override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val totalItemCount = layoutManager.itemCount
-                val visibleItemCount = layoutManager.childCount
                 val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
 
                 if( (lastVisibleItem + 1 ) == totalItemCount ){

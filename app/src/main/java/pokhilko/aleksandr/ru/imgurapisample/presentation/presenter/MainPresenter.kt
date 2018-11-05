@@ -21,21 +21,14 @@ class MainPresenter : MvpPresenter<MainView>(), KoinComponent {
     private var isLoading = false
     private var hasLoadedAllImages = false
 
-    override fun onFirstViewAttach() {
-        super.onFirstViewAttach()
-        getLocalImages()
-    }
-
-    private fun getLocalImages() {
+    fun getLocalImages() {
         useCase.getAllLocalImages()
                 .schedulersIoToMain()
                 .subscribe(
                         {
                             viewState.showImages(it)
-                            if (it.size == 0) {
+                            if (it.isEmpty()) {
                                 loadMore()
-                            } else {
-                                page = 1
                             }
                         },
                         { Timber.e(it) }
@@ -45,6 +38,7 @@ class MainPresenter : MvpPresenter<MainView>(), KoinComponent {
     fun loadMore() {
         if (!isLoading) {
             isLoading = true
+
             useCase.loadImagesFromNetwork(page++)
                     .schedulersIoToMain()
                     .subscribe(
@@ -58,7 +52,6 @@ class MainPresenter : MvpPresenter<MainView>(), KoinComponent {
                                             Timber.d("hasLoadedAllImages = $hasLoadedAllImages")
                                         },
                                                 { Timber.e(it) })
-                                Timber.d("subscribe")
                             },
                             { Timber.e(it) }
                     )
