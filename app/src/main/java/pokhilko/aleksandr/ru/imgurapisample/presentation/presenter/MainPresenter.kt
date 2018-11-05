@@ -5,7 +5,8 @@ import com.arellomobile.mvp.MvpPresenter
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 import pokhilko.aleksandr.ru.data.utils.schedulersIoToMain
-import pokhilko.aleksandr.ru.domain.usecase.GalleryUseCase
+import pokhilko.aleksandr.ru.domain.usecase.ImageUseCase
+import pokhilko.aleksandr.ru.domain.usecase.PageUseCase
 import pokhilko.aleksandr.ru.imgurapisample.presentation.view.MainView
 import timber.log.Timber
 
@@ -15,14 +16,17 @@ import timber.log.Timber
 @InjectViewState
 class MainPresenter : MvpPresenter<MainView>(), KoinComponent {
 
-    private val useCase: GalleryUseCase by inject()
+    private val imageUseCase: ImageUseCase by inject()
+    private val pageUseCase: PageUseCase by inject()
 
     private var page = 0
     private var isLoading = false
     private var hasLoadedAllImages = false
 
     fun getLocalImages() {
-        useCase.getAllLocalImages()
+        page = pageUseCase.getCurrentPage()
+        Timber.d("current page = $page")
+        imageUseCase.getAllLocalImages()
                 .schedulersIoToMain()
                 .subscribe(
                         {
@@ -39,12 +43,15 @@ class MainPresenter : MvpPresenter<MainView>(), KoinComponent {
         if (!isLoading) {
             isLoading = true
 
-            useCase.loadImagesFromNetwork(page++)
+            imageUseCase.loadImagesFromNetwork(page++)
                     .schedulersIoToMain()
                     .subscribe(
                             { pair ->
                                 isLoading = false
-                                useCase.getImagesCountInStorage()
+
+                                pageUseCase.saveCurrentPage(page)
+
+                                imageUseCase.getImagesCountInStorage()
                                         .schedulersIoToMain()
                                         .subscribe({
                                             Timber.d("it = $it pair.second = ${pair.second}")
