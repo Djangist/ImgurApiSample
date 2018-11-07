@@ -27,5 +27,5 @@ class ApiTest : AutoCloseKoinTest() {
     fun getImages_Response_first_page_success() {
         api.imagesPaged(0).test().assertComplete()
     }
-    
+
 }
