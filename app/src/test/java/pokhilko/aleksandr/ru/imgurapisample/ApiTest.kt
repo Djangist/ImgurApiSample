@@ -25,7 +25,23 @@ class ApiTest : AutoCloseKoinTest() {
 
     @Test
     fun getImages_Response_first_page_success() {
-        api.imagesPaged(0).test().assertComplete()
+        api.imagesPaged(0)
+                .test()
+                .assertComplete()
+    }
+
+    @Test
+    fun getImages_Response_first_page_items_not_empty() {
+        api.imagesPaged(0)
+                .test()
+                .assertValue { it.data?.items!!.isNotEmpty() }
+    }
+
+    @Test
+    fun getImages_Response_items_is_empty() {
+        api.imagesPaged(22)
+                .test()
+                .assertValue { it.data?.items!!.isEmpty() }
     }
 
 }

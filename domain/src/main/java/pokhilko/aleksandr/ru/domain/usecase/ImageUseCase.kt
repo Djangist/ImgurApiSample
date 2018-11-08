@@ -9,7 +9,7 @@ import pokhilko.aleksandr.ru.domain.repository.ImageRepository
 /**
  * Created by Aleksandr Pokhilko on 30.10.2018
  */
-class ImageUseCase(val repository: ImageRepository){
+class ImageUseCase(private val repository: ImageRepository){
 
     fun getAllLocalImages(): Flowable<PagedList<Image>> {
         return repository.getImagesFromStorage()

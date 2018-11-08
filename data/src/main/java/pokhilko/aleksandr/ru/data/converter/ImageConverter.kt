@@ -17,13 +17,6 @@ object ImageConverter {
                 id = source.id)
     }
 
-    fun toEntity(source: ImageResponse): ImageEntity {
-        return ImageEntity(
-                description = source.description?: "",
-                id = source.id,
-                link = source.link)
-    }
-
     fun toEntity(source: Image): ImageEntity {
         return ImageEntity(
                 description = source.description,
